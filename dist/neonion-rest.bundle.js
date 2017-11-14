@@ -69,112 +69,13 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__ = __webpack_require__(1);
-
-
-
-const host = '0.0.0.0';
-const port = 8301;
-
-
-
-async function testCreateTarget(id=1) {
-  let response;
-    try {
-      response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["c" /* createTarget */])({host, port, id, info:{test:'test'}});
-      console.log('TARGET RETURNED', response);
-    } catch (e) {
-      console.log('Hmm, some error occured during fetch');
-      console.log(e);
-    }
-
-    return response;
-}
-
-
-
-async function testFetchTarget(id=1) {
-  console.log(`trying to fetch target with id: ${id}`);
-  let response;
-    try {
-      response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["e" /* fetchTarget */])({id, host, port});
-      console.log('TARGET RETURNED', response);
-    } catch (e) {
-      console.log('Hmm, some error occured during fetch');
-      console.log(e);
-    }
-
-    return response;
-}
-
-
-
-async function testFetchTargets() {
-  console.log('trying to fetch multiple targets. one justcreated the other not.');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["f" /* fetchTargets */])({ids:[1, 2], host, port});
-}
-
-async function testCreateAnnotation() {
-  console.log('trying to create annotation');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["b" /* createAnnotation */])({targetID:1, id:1, info:{customKey: "test"}, host, port});
-}
-
-async function testFetchAnnotation() {
-  console.log('trying to fetch annotation');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["d" /* fetchAnnotation */])({targetID:1, id:1, host, port});
-}
-
-async function testFetchAnnotationViaWrapper() {
-  // test create endpoint wrapper/management object
-  let testTarget = new __WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["a" /* NeonionRestTarget */]({host, port, id:1});
-  return testTarget.fetchAnnotation(1);
-}
-
-// Selenium can only read the window or document context
-// thats why we put our functions and testing results (promises) into window.
-
-
-window.testCreateTarget = testCreateTarget;
-window.testFetchTarget = testFetchTarget;
-
-
-
-async function runTests() {
-  window.createTargetResponse = await testCreateTarget();
-  window.fetchTargetResponse = await testFetchTarget();
-  window.fetchTargetsResponse = await testFetchTargets();
-  window.conflictTargetResponse = await testCreateTarget();
-  window.createAnnotationResponse = await testCreateAnnotation();
-  window.fetchAnnotationResponse = await testFetchAnnotation();
-  window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
-
-  return Promise.all([
-    window.createTargetResponse,
-    window.fetchTargetResponse,
-    window.fetchTargetsResponse,
-    window.conflictTargetResponse,
-    window.createAnnotationResponse,
-    window.fetchAnnotationResponse,
-    window.testFetchAnnotationViaWrapperResponse
-  ]);
-
-};
-
-runTests().then(console.log)
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = createTarget;
-/* harmony export (immutable) */ __webpack_exports__["e"] = fetchTarget;
-/* harmony export (immutable) */ __webpack_exports__["f"] = fetchTargets;
-/* harmony export (immutable) */ __webpack_exports__["b"] = createAnnotation;
-/* harmony export (immutable) */ __webpack_exports__["d"] = fetchAnnotation;
-/* unused harmony export fetchAnnotations */
-/* harmony export (immutable) */ __webpack_exports__["a"] = NeonionRestTarget;
+/* harmony export (immutable) */ __webpack_exports__["createTarget"] = createTarget;
+/* harmony export (immutable) */ __webpack_exports__["fetchTarget"] = fetchTarget;
+/* harmony export (immutable) */ __webpack_exports__["fetchTargets"] = fetchTargets;
+/* harmony export (immutable) */ __webpack_exports__["createAnnotation"] = createAnnotation;
+/* harmony export (immutable) */ __webpack_exports__["fetchAnnotation"] = fetchAnnotation;
+/* harmony export (immutable) */ __webpack_exports__["fetchAnnotations"] = fetchAnnotations;
+/* harmony export (immutable) */ __webpack_exports__["NeonionRestTarget"] = NeonionRestTarget;
 // TODO: create Function or Class that wraps the API functions.
 // wanted usage:
 // let neonion = new Neonion(ip, port)
@@ -352,7 +253,7 @@ function NeonionRestTarget({host="0.0.0.0", port=8301, id}) {
 let NeonionRest = {createTarget, fetchTarget, fetchTargets, createAnnotation, fetchAnnotations, NeonionRestTarget};
 
 
-/* unused harmony default export */ var _unused_webpack_default_export = (NeonionRest);
+/* harmony default export */ __webpack_exports__["default"] = (NeonionRest);
 
 
 /***/ })

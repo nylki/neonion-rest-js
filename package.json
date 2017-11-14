@@ -2,11 +2,12 @@
   "name": "neonion-rest-jsfetch",
   "version": "1.0.0",
   "description": "Testing the neonion-rest proposal with the Fetch API (web standard)",
-  "main": "index.js",
+  "main": "neonion-rest.js",
   "scripts": {
+    "dist": "webpack --config webpack.config.js",
     "dev-test": "concurrently -k \"browser-sync start --no-open --reload-delay 500 --server \"test/dist\" -f \"test/dist\"\" \"watch 'npm run build-test' -d -p /test/dist/ --interval=2 --wait=6\"",
     "build-test": "webpack --config test/webpack.config.js && cp test/index.html test/dist/index.html",
-    "test": "npm run build-test && concurrently -k --success first \"browser-sync --no-ui --no-inject-changes --no-open start --server \"test/dist\" -f \"test/dist\"\" \"mocha --timeout 5000 test/test.js\""
+    "test": "npm run build-test && concurrently -k --success first \"browser-sync --no-ui --no-inject-changes --no-open start --server \"test/dist\" -f \"test/dist\"\" \"mocha --timeout 10000 test/test.js\""
   },
   "author": "",
   "license": "ISC",

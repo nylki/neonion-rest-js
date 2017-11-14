@@ -4,7 +4,7 @@
 // neonion.fetchAnnotation(projectid, annotationid)
 // maybe:
 // let projectFoo = neonion.project(id)
-// projectFoo.fetchannotation()
+// projectFoo.fetchAnnotation()
 
 
 // TODO: Use indexedDB to cache project JSON, and annotation JSON
@@ -170,3 +170,9 @@ export function NeonionRestTarget({host="0.0.0.0", port=8301, id}) {
   }
 
 }
+
+
+let NeonionRest = {createTarget, fetchTarget, fetchTargets, createAnnotation, fetchAnnotations, NeonionRestTarget};
+
+
+export default NeonionRest;
