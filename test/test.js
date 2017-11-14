@@ -41,7 +41,6 @@ describe('neon rest API with fetch', function() {
     await driver.get('http://localhost:3000');
 
     // TODO: Fix tests, so they actually use a random ID instead of default 1
-    let randomID = Math.ceil(Math.random(1000));
     let createTargetResponse = await driver.executeScript('return window.createTargetResponse');
     console.log(createTargetResponse);
     assert.equal(createTargetResponse.status, 201);

@@ -7,7 +7,10 @@ module.exports = {
   entry: './neonion-rest.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'neonion-rest.bundle.js'
+    filename: 'neonion-rest.bundle.js',
+    library: 'NeonionRest',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   module: {
     rules: [

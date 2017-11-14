@@ -78,7 +78,7 @@ const port = 8301;
 
 
 
-async function testCreateTarget(id=1) {
+async function testCreateTarget(id='target:1') {
   let response;
     try {
       response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["c" /* createTarget */])({host, port, id, info:{test:'test'}});
@@ -93,7 +93,7 @@ async function testCreateTarget(id=1) {
 
 
 
-async function testFetchTarget(id=1) {
+async function testFetchTarget(id='target:1') {
   console.log(`trying to fetch target with id: ${id}`);
   let response;
     try {
@@ -111,23 +111,23 @@ async function testFetchTarget(id=1) {
 
 async function testFetchTargets() {
   console.log('trying to fetch multiple targets. one justcreated the other not.');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["f" /* fetchTargets */])({ids:[1, 2], host, port});
+  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["f" /* fetchTargets */])({ids:['target:1', 'target:2'], host, port});
 }
 
 async function testCreateAnnotation() {
   console.log('trying to create annotation');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["b" /* createAnnotation */])({targetID:1, id:1, info:{customKey: "test"}, host, port});
+  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["b" /* createAnnotation */])({targetID:'target:1', id:'annotation:1', info:{customKey: "test"}, host, port});
 }
 
 async function testFetchAnnotation() {
   console.log('trying to fetch annotation');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["d" /* fetchAnnotation */])({targetID:1, id:1, host, port});
+  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["d" /* fetchAnnotation */])({targetID:'target:1', id:'annotation:1', host, port});
 }
 
 async function testFetchAnnotationViaWrapper() {
   // test create endpoint wrapper/management object
-  let testTarget = new __WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["a" /* NeonionRestTarget */]({host, port, id:1});
-  return testTarget.fetchAnnotation(1);
+  let testTarget = new __WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["a" /* NeonionRestTarget */]({host, port, id:'target:1'});
+  return testTarget.fetchAnnotation('annotation:1');
 }
 
 // Selenium can only read the window or document context
@@ -243,12 +243,16 @@ async function fetchJSON(url) {
 async function createTarget({id, info, host="0.0.0.0", port=8301}) {
   if(id === undefined) throw new Error('No ID specified for target creation.');
 
-  let body = Object.assign({id: `target:${id}`}, info);
+  let body = Object.assign({id: `${id}`}, info);
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
-  let url = `http://${host}:${port}/targets/target%3A${id}`;
+  let url = `http://${host}:${port}/targets/${id}`;
   let request = new Request(url, config);
 
   return fetch(request);
+}
+
+function formatID(id) {
+  return id.replace(':', '%3A');
 }
 
 
@@ -260,7 +264,7 @@ async function createTarget({id, info, host="0.0.0.0", port=8301}) {
  * @return {Promise->Object} Promise that resolves into the target Object
  */
 async function fetchTarget({id, host, port}) {
-  return fetchJSON(`http://${host}:${port}/targets/target%3A${id}`);
+  return fetchJSON(`http://${host}:${port}/targets/${formatID(id)}`);
 }
 
 /**
@@ -291,13 +295,13 @@ async function createAnnotation({targetID, id, info, host="0.0.0.0", port=8301})
   if(id === undefined) throw new Error('No ID specified for annotation creation.');
 
   let body = Object.assign({
-    target: `target:${targetID}`,
-    id: `annotation:${id}`},
+    target: `${targetID}`,
+    id: `${id}`},
     annotationBaseConfig,
     info);
 
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
-  let url = `http://${host}:${port}/targets/target%3A${targetID}/annotations/annotation%3A${id}`;
+  let url = `http://${host}:${port}/targets/${targetID}/annotations/${formatID(id)}`;
   let request = new Request(url, config);
   console.log(config);
 
@@ -305,12 +309,12 @@ async function createAnnotation({targetID, id, info, host="0.0.0.0", port=8301})
 }
 
 async function fetchAnnotation({targetID, id, host="0.0.0.0", port=8301}) {
-  return fetchJSON(`http://${host}:${port}/targets/target%3A${targetID}/annotations/annotation%3A${id}`);
+  return fetchJSON(`http://${host}:${port}/targets/${formatID(targetID)}/annotations/${formatID(id)}`);
 }
 
 async function fetchAnnotations({targetID, ids=[], host="0.0.0.0", port=8301}) {
   if(ids.length === 0) {
-    return fetchJSON(`http://${host}:${port}/targets/target%3A${targetID}/annotations`);
+    return fetchJSON(`http://${host}:${port}/targets/${formatID(targetID)}/annotations`);
   } else {
     let promises = ids.map(id => fetchAnnotation(targetID, id, host, port));
     return Promise.all(promises);

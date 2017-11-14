@@ -66,12 +66,16 @@ async function fetchJSON(url) {
 export async function createTarget({id, info, host="0.0.0.0", port=8301}) {
   if(id === undefined) throw new Error('No ID specified for target creation.');
 
-  let body = Object.assign({id: `target:${id}`}, info);
+  let body = Object.assign({id: `${id}`}, info);
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
-  let url = `http://${host}:${port}/targets/target%3A${id}`;
+  let url = `http://${host}:${port}/targets/${id}`;
   let request = new Request(url, config);
 
   return fetch(request);
+}
+
+function formatID(id) {
+  return id.replace(':', '%3A');
 }
 
 
@@ -83,7 +87,7 @@ export async function createTarget({id, info, host="0.0.0.0", port=8301}) {
  * @return {Promise->Object} Promise that resolves into the target Object
  */
 export async function fetchTarget({id, host, port}) {
-  return fetchJSON(`http://${host}:${port}/targets/target%3A${id}`);
+  return fetchJSON(`http://${host}:${port}/targets/${formatID(id)}`);
 }
 
 /**
@@ -114,13 +118,13 @@ export async function createAnnotation({targetID, id, info, host="0.0.0.0", port
   if(id === undefined) throw new Error('No ID specified for annotation creation.');
 
   let body = Object.assign({
-    target: `target:${targetID}`,
-    id: `annotation:${id}`},
+    target: `${targetID}`,
+    id: `${id}`},
     annotationBaseConfig,
     info);
 
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
-  let url = `http://${host}:${port}/targets/target%3A${targetID}/annotations/annotation%3A${id}`;
+  let url = `http://${host}:${port}/targets/${targetID}/annotations/${formatID(id)}`;
   let request = new Request(url, config);
   console.log(config);
 
@@ -128,12 +132,12 @@ export async function createAnnotation({targetID, id, info, host="0.0.0.0", port
 }
 
 export async function fetchAnnotation({targetID, id, host="0.0.0.0", port=8301}) {
-  return fetchJSON(`http://${host}:${port}/targets/target%3A${targetID}/annotations/annotation%3A${id}`);
+  return fetchJSON(`http://${host}:${port}/targets/${formatID(targetID)}/annotations/${formatID(id)}`);
 }
 
 export async function fetchAnnotations({targetID, ids=[], host="0.0.0.0", port=8301}) {
   if(ids.length === 0) {
-    return fetchJSON(`http://${host}:${port}/targets/target%3A${targetID}/annotations`);
+    return fetchJSON(`http://${host}:${port}/targets/${formatID(targetID)}/annotations`);
   } else {
     let promises = ids.map(id => fetchAnnotation(targetID, id, host, port));
     return Promise.all(promises);

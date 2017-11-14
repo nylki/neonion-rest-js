@@ -6,7 +6,7 @@ const port = 8301;
 
 
 
-async function testCreateTarget(id=1) {
+async function testCreateTarget(id='target:1') {
   let response;
     try {
       response = await createTarget({host, port, id, info:{test:'test'}});
@@ -21,7 +21,7 @@ async function testCreateTarget(id=1) {
 
 
 
-async function testFetchTarget(id=1) {
+async function testFetchTarget(id='target:1') {
   console.log(`trying to fetch target with id: ${id}`);
   let response;
     try {
@@ -39,23 +39,23 @@ async function testFetchTarget(id=1) {
 
 async function testFetchTargets() {
   console.log('trying to fetch multiple targets. one justcreated the other not.');
-  return fetchTargets({ids:[1, 2], host, port});
+  return fetchTargets({ids:['target:1', 'target:2'], host, port});
 }
 
 async function testCreateAnnotation() {
   console.log('trying to create annotation');
-  return createAnnotation({targetID:1, id:1, info:{customKey: "test"}, host, port});
+  return createAnnotation({targetID:'target:1', id:'annotation:1', info:{customKey: "test"}, host, port});
 }
 
 async function testFetchAnnotation() {
   console.log('trying to fetch annotation');
-  return fetchAnnotation({targetID:1, id:1, host, port});
+  return fetchAnnotation({targetID:'target:1', id:'annotation:1', host, port});
 }
 
 async function testFetchAnnotationViaWrapper() {
   // test create endpoint wrapper/management object
-  let testTarget = new NeonionRestTarget({host, port, id:1});
-  return testTarget.fetchAnnotation(1);
+  let testTarget = new NeonionRestTarget({host, port, id:'target:1'});
+  return testTarget.fetchAnnotation('annotation:1');
 }
 
 // Selenium can only read the window or document context
