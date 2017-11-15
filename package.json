@@ -11,9 +11,7 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
     "assert": "^1.4.1",
     "browser-sync": "^2.18.13",

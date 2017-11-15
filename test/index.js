@@ -10,7 +10,6 @@ async function testCreateTarget(id='target:1') {
   let response;
     try {
       response = await createTarget({host, port, id, info:{test:'test'}});
-      console.log('TARGET RETURNED', response);
     } catch (e) {
       console.log('Hmm, some error occured during fetch');
       console.log(e);
@@ -26,7 +25,6 @@ async function testFetchTarget(id='target:1') {
   let response;
     try {
       response = await fetchTarget({id, host, port});
-      console.log('TARGET RETURNED', response);
     } catch (e) {
       console.log('Hmm, some error occured during fetch');
       console.log(e);
@@ -44,7 +42,7 @@ async function testFetchTargets() {
 
 async function testCreateAnnotation() {
   console.log('trying to create annotation');
-  return createAnnotation({targetID:'target:1', id:'annotation:1', info:{customKey: "test"}, host, port});
+  return createAnnotation({targetID:'target:1', id:'annotation:1', info: {customKey: "test"}, host, port});
 }
 
 async function testFetchAnnotation() {
@@ -81,7 +79,6 @@ async function runTests() {
   window.conflictTargetResponse = await testCreateTarget();
   window.createAnnotationResponse = await testCreateAnnotation();
   window.fetchAnnotationResponse = await testFetchAnnotation();
-  console.log('TEST FETCH', window.fetchAnnotationResponse);
   window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
   window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
 

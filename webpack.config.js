@@ -14,25 +14,21 @@ module.exports = {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.js$/,
-      //   exclude: /(node_modules)/,
-      //   use: {
-      //     loader: 'babel-loader',
-      //     options: {
-      //       babelrc: true
-      //     }
-      //   }
-      // },
-
-    ]
+    //   {
+    //     test: /\.js$/,
+    //     exclude: /(node_modules)/,
+    //     use: {
+    //       loader: 'babel-loader',
+    //       options: {
+    //         presets: ['@babel/preset-env'],
+    //         plugins: [require('babel-plugin-transform-object-rest-spread')]
+    //       }
+    //     }
+    //   },
+    //
+    // ]
   },
   plugins: [
-    // new webpack.LoaderOptionsPlugin({
-    //   minimize: true,
-    //   debug: false
-    // }),
 
   ],
 };
-0

@@ -116,7 +116,7 @@ async function testFetchTargets() {
 
 async function testCreateAnnotation() {
   console.log('trying to create annotation');
-  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["b" /* createAnnotation */])({targetID:'target:1', id:'annotation:1', info:{customKey: "test"}, host, port});
+  return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["b" /* createAnnotation */])({targetID:'target:1', id:'annotation:1', info: {customKey: "test"}, host, port});
 }
 
 async function testFetchAnnotation() {
@@ -152,6 +152,7 @@ async function runTests() {
   window.fetchTargetsResponse = await testFetchTargets();
   window.conflictTargetResponse = await testCreateTarget();
   window.createAnnotationResponse = await testCreateAnnotation();
+  console.log('TEST CREATE', window.createAnnotationResponse);
   window.fetchAnnotationResponse = await testFetchAnnotation();
   console.log('TEST FETCH', window.fetchAnnotationResponse);
   window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
@@ -206,7 +207,7 @@ const putRequestBaseConfig = {
 };
 
 // Default values for annotation JSON Object
-const annotationBaseConfig = {
+const annotationMinBody = {
   // @context has to be wrapped in quotes in JSON because of the @
   '@context': 'http://www.w3.org/ns/anno.jsonld',
   type: 'Annotation'
@@ -299,25 +300,15 @@ async function fetchTargets({ids=[], host="0.0.0.0", port=8301}) {
  * @param  {Number} [port=8301]
  * @return {Promise->Object} Promise that resolves into the request result
  */
-async function createAnnotation({targetID, id, info, host="0.0.0.0", port=8301}) {
+async function createAnnotation({targetID, id, info={}, host="0.0.0.0", port=8301}) {
+
   if(id === undefined) throw new Error('No ID specified for annotation creation.');
+  if(targetID === undefined) throw new Error('No target ID specified for annotation creation');
 
-  let body = Object.assign({
-    annotationBaseConfig,
-    info,
-    target: `${targetID}`,
-    id: `${id}`});
-
-    console.log('THE BODY');
-    console.log(body);
-    console.log('THE BODY STRINGIFIED');
-    console.log(JSON.stringify(body));
-
+  let body = Object.assign({target: `${targetID}`, id: `${id}`}, annotationMinBody, info);
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
-  let url = `http://${host}:${port}/targets/${targetID}/annotations/${formatID(id)}`;
+  let url = `http://${host}:${port}/targets/${formatID(targetID)}/annotations/${formatID(id)}`;
   let request = new Request(url, config);
-  console.log(config);
-
   return fetch(request);
 }
 
@@ -343,10 +334,10 @@ async function fetchAnnotations({targetID, ids=[], host="0.0.0.0", port=8301}) {
  * @constructor
  */
 function NeonionRestTarget({host="0.0.0.0", port=8301, id}) {
+
   this.targetID = id;
   this.host = host;
   this.port = port;
-
 
   this.fetchAnnotation = function (id) {
     return fetchAnnotation({targetID: this.targetID, id, host: this.host, port: this.port});

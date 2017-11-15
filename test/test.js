@@ -57,7 +57,7 @@ describe('neon rest API with fetch', function() {
     // Also expect the second entry to be undefined, as target:2 has not
     // beeen created.
     let fetchTargetsResponse = await driver.executeScript('return window.fetchTargetsResponse');
-    assert(fetchTargetsResponse !== undefined);
+    assert(fetchTargetsResponse !== undefined && fetchTargetsResponse !== null);
     assert.equal(fetchTargetsResponse.length, 2);
     assert.equal(fetchTargetsResponse[0].id, 'target:1');
 
@@ -67,7 +67,8 @@ describe('neon rest API with fetch', function() {
     assert.equal(conflictTargetResponse.statusText, 'Conflict');
 
     // Create annotation @ target 1
-    let createAnnotationResponse = await driver.executeScript('return window.createTargetResponse');
+    let createAnnotationResponse = await driver.executeScript('return window.createAnnotationResponse');
+    console.log('createAnnotationResponse:', createAnnotationResponse);
     assert.equal(createAnnotationResponse.status, 201);
     assert.equal(createAnnotationResponse.statusText, 'Created');
 
@@ -75,7 +76,8 @@ describe('neon rest API with fetch', function() {
 
     // Fetch just created annotation
     let fetchAnnotationResponse = await driver.executeScript('return window.fetchAnnotationResponse');
-    assert(fetchAnnotationResponse !== undefined);
+    console.log('fetchAnnotationResponse:', fetchAnnotationResponse);
+    assert(fetchAnnotationResponse !== undefined && fetchAnnotationResponse !== null);
     assert.equal(fetchAnnotationResponse.id, 'annotation:1');
     assert.equal(fetchAnnotationResponse.target, 'target:1');
     assert.equal(fetchAnnotationResponse.type, 'Annotation');

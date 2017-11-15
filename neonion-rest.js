@@ -20,7 +20,7 @@ const putRequestBaseConfig = {
 };
 
 // Default values for annotation JSON Object
-const annotationBaseConfig = {
+const annotationMinBody = {
   // @context has to be wrapped in quotes in JSON because of the @
   '@context': 'http://www.w3.org/ns/anno.jsonld',
   type: 'Annotation'
@@ -113,19 +113,15 @@ export async function fetchTargets({ids=[], host="0.0.0.0", port=8301}) {
  * @param  {Number} [port=8301]
  * @return {Promise->Object} Promise that resolves into the request result
  */
-export async function createAnnotation({targetID, id, info, host="0.0.0.0", port=8301}) {
+export async function createAnnotation({targetID, id, info={}, host="0.0.0.0", port=8301}) {
+
   if(id === undefined) throw new Error('No ID specified for annotation creation.');
+  if(targetID === undefined) throw new Error('No target ID specified for annotation creation');
 
-  let body = Object.assign({
-    annotationBaseConfig,
-    info,
-    target: `${targetID}`,
-    id: `${id}`});
-
+  let body = Object.assign({target: `${targetID}`, id: `${id}`}, annotationMinBody, info);
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
-  let url = `http://${host}:${port}/targets/${targetID}/annotations/${formatID(id)}`;
+  let url = `http://${host}:${port}/targets/${formatID(targetID)}/annotations/${formatID(id)}`;
   let request = new Request(url, config);
-
   return fetch(request);
 }
 
