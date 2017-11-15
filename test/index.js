@@ -52,10 +52,17 @@ async function testFetchAnnotation() {
   return fetchAnnotation({targetID:'target:1', id:'annotation:1', host, port});
 }
 
+async function testCreateAnnotationViaWrapper() {
+  // test create endpoint wrapper/management object
+  let testTarget = new NeonionRestTarget({host, port, id:'target:1'});
+  // return testTarget.createAnnotation({id:'annotation:5', info:{position:[-2,-1,3]}});
+  return testTarget.createAnnotation({id:'annotation:2', info:{position:[1,2,3]}});
+}
+
 async function testFetchAnnotationViaWrapper() {
   // test create endpoint wrapper/management object
   let testTarget = new NeonionRestTarget({host, port, id:'target:1'});
-  return testTarget.fetchAnnotation('annotation:1');
+  return testTarget.fetchAnnotation('annotation:2');
 }
 
 // Selenium can only read the window or document context
@@ -74,6 +81,8 @@ async function runTests() {
   window.conflictTargetResponse = await testCreateTarget();
   window.createAnnotationResponse = await testCreateAnnotation();
   window.fetchAnnotationResponse = await testFetchAnnotation();
+  console.log('TEST FETCH', window.fetchAnnotationResponse);
+  window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
   window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
 
   return Promise.all([

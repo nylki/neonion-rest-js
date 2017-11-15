@@ -85,10 +85,10 @@ describe('neon rest API with fetch', function() {
     // Fetch just created annotation via wrapper object
     let testFetchAnnotationViaWrapperResponse = await driver.executeScript('return window.testFetchAnnotationViaWrapperResponse');
     assert(fetchAnnotationResponse !== undefined);
-    assert.equal(testFetchAnnotationViaWrapperResponse.id, 'annotation:1');
+    assert.equal(testFetchAnnotationViaWrapperResponse.id, 'annotation:2');
     assert.equal(testFetchAnnotationViaWrapperResponse.target, 'target:1');
     assert.equal(testFetchAnnotationViaWrapperResponse.type, 'Annotation');
-    assert.equal(testFetchAnnotationViaWrapperResponse.customKey, 'test');
+    assert.equal(testFetchAnnotationViaWrapperResponse.position[1], 2);
     assert.equal(testFetchAnnotationViaWrapperResponse['@context'], 'http://www.w3.org/ns/anno.jsonld');
 
   });

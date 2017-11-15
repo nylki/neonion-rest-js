@@ -65,7 +65,6 @@ async function fetchJSON(url) {
  */
 export async function createTarget({id, info, host="0.0.0.0", port=8301}) {
   if(id === undefined) throw new Error('No ID specified for target creation.');
-
   let body = Object.assign({id: `${id}`}, info);
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
   let url = `http://${host}:${port}/targets/${id}`;
@@ -118,15 +117,14 @@ export async function createAnnotation({targetID, id, info, host="0.0.0.0", port
   if(id === undefined) throw new Error('No ID specified for annotation creation.');
 
   let body = Object.assign({
-    target: `${targetID}`,
-    id: `${id}`},
     annotationBaseConfig,
-    info);
+    info,
+    target: `${targetID}`,
+    id: `${id}`});
 
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
   let url = `http://${host}:${port}/targets/${targetID}/annotations/${formatID(id)}`;
   let request = new Request(url, config);
-  console.log(config);
 
   return fetch(request);
 }
@@ -153,10 +151,10 @@ export async function fetchAnnotations({targetID, ids=[], host="0.0.0.0", port=8
  * @constructor
  */
 export function NeonionRestTarget({host="0.0.0.0", port=8301, id}) {
+
   this.targetID = id;
   this.host = host;
   this.port = port;
-
 
   this.fetchAnnotation = function (id) {
     return fetchAnnotation({targetID: this.targetID, id, host: this.host, port: this.port});

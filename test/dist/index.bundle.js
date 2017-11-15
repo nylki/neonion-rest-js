@@ -124,10 +124,17 @@ async function testFetchAnnotation() {
   return Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["d" /* fetchAnnotation */])({targetID:'target:1', id:'annotation:1', host, port});
 }
 
+async function testCreateAnnotationViaWrapper() {
+  // test create endpoint wrapper/management object
+  let testTarget = new __WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["a" /* NeonionRestTarget */]({host, port, id:'target:1'});
+  // return testTarget.createAnnotation({id:'annotation:5', info:{position:[-2,-1,3]}});
+  return testTarget.createAnnotation({id:'annotation:2', info:{position:[1,2,3]}});
+}
+
 async function testFetchAnnotationViaWrapper() {
   // test create endpoint wrapper/management object
   let testTarget = new __WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["a" /* NeonionRestTarget */]({host, port, id:'target:1'});
-  return testTarget.fetchAnnotation('annotation:1');
+  return testTarget.fetchAnnotation('annotation:2');
 }
 
 // Selenium can only read the window or document context
@@ -146,6 +153,8 @@ async function runTests() {
   window.conflictTargetResponse = await testCreateTarget();
   window.createAnnotationResponse = await testCreateAnnotation();
   window.fetchAnnotationResponse = await testFetchAnnotation();
+  console.log('TEST FETCH', window.fetchAnnotationResponse);
+  window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
   window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
 
   return Promise.all([
@@ -242,7 +251,6 @@ async function fetchJSON(url) {
  */
 async function createTarget({id, info, host="0.0.0.0", port=8301}) {
   if(id === undefined) throw new Error('No ID specified for target creation.');
-
   let body = Object.assign({id: `${id}`}, info);
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
   let url = `http://${host}:${port}/targets/${id}`;
@@ -295,10 +303,15 @@ async function createAnnotation({targetID, id, info, host="0.0.0.0", port=8301})
   if(id === undefined) throw new Error('No ID specified for annotation creation.');
 
   let body = Object.assign({
-    target: `${targetID}`,
-    id: `${id}`},
     annotationBaseConfig,
-    info);
+    info,
+    target: `${targetID}`,
+    id: `${id}`});
+
+    console.log('THE BODY');
+    console.log(body);
+    console.log('THE BODY STRINGIFIED');
+    console.log(JSON.stringify(body));
 
   let config = Object.assign({body: JSON.stringify(body)}, putRequestBaseConfig);
   let url = `http://${host}:${port}/targets/${targetID}/annotations/${formatID(id)}`;
