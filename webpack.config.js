@@ -3,7 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  target: 'web',
   entry: './neonion-rest.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -26,7 +25,7 @@ module.exports = {
     //     }
     //   },
     //
-    // ]
+    ]
   },
   plugins: [
 

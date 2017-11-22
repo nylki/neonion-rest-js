@@ -82,7 +82,6 @@ async function testCreateTarget(id='target:1') {
   let response;
     try {
       response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["c" /* createTarget */])({host, port, id, info:{test:'test'}});
-      console.log('TARGET RETURNED', response);
     } catch (e) {
       console.log('Hmm, some error occured during fetch');
       console.log(e);
@@ -98,7 +97,6 @@ async function testFetchTarget(id='target:1') {
   let response;
     try {
       response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["e" /* fetchTarget */])({id, host, port});
-      console.log('TARGET RETURNED', response);
     } catch (e) {
       console.log('Hmm, some error occured during fetch');
       console.log(e);
@@ -152,9 +150,7 @@ async function runTests() {
   window.fetchTargetsResponse = await testFetchTargets();
   window.conflictTargetResponse = await testCreateTarget();
   window.createAnnotationResponse = await testCreateAnnotation();
-  console.log('TEST CREATE', window.createAnnotationResponse);
   window.fetchAnnotationResponse = await testFetchAnnotation();
-  console.log('TEST FETCH', window.fetchAnnotationResponse);
   window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
   window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
 

@@ -2,7 +2,8 @@
   "name": "neonion-rest-jsfetch",
   "version": "1.0.0",
   "description": "Testing the neonion-rest proposal with the Fetch API (web standard)",
-  "main": "neonion-rest.js",
+  "main": "dist/neonion-rest.bundle.js",
+  "module": "neonion-rest.js",
   "scripts": {
     "dist": "webpack --config webpack.config.js",
     "dev-test": "concurrently -k \"browser-sync start --no-open --reload-delay 500 --server \"test/dist\" -f \"test/dist\"\" \"watch 'npm run build-test' -d -p /test/dist/ --interval=2 --wait=6\"",
