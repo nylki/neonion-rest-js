@@ -244,7 +244,6 @@ async function fetchJSON(url) {
 
   } catch (e) {
     // Some kind of network error.
-    console.warn(`Could not fetch JSON for url ${url}\n:`, e);
     throw e;
   }
 

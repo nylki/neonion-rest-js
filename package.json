@@ -1,6 +1,6 @@
 {
   "name": "neonion-rest-jsfetch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Testing the neonion-rest proposal with the Fetch API (web standard)",
   "main": "dist/neonion-rest.bundle.js",
   "module": "neonion-rest.js",
