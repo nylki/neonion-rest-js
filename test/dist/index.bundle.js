@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("NeonionRest", [], factory);
+	else if(typeof exports === 'object')
+		exports["NeonionRest"] = factory();
+	else
+		root["NeonionRest"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -234,7 +244,7 @@ async function fetchJSON(url) {
 
   } catch (e) {
     console.warn(`Could not fetch fetching JSON for url ${url}\n:`, e);
-    return;
+    return e;
   }
 
 }
@@ -361,3 +371,4 @@ let NeonionRest = {createTarget, fetchTarget, fetchTargets, createAnnotation, fe
 
 /***/ })
 /******/ ]);
+});

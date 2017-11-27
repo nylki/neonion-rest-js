@@ -51,7 +51,7 @@ async function fetchJSON(url) {
 
   } catch (e) {
     console.warn(`Could not fetch fetching JSON for url ${url}\n:`, e);
-    return;
+    return e;
   }
 
 }
