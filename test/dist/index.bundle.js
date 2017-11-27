@@ -228,6 +228,15 @@ function isContentType(response, type) {
   return contentType && contentType.includes(type);
 }
 
+function fetchException(message, originalResponse, statusCode, statusText) {
+  this.message = message;
+  if(originalResponse) this.originalResponse = originalResponse;
+  if(statusCode) this.statusCode = statusCode;
+  if(statusText) this.statusText = statusText;
+
+  this.toString = () => `${(this.statusCode && this.statusText) ? `(Error ${this.statusCode} ${this.statusText})` : ''} ${this.message}`;
+}
+
 /**
  * Try to fetch JSON for given url.
  * @param  {String} url url to fetch
@@ -237,11 +246,11 @@ function isContentType(response, type) {
 
    let response = await fetch(url, {method: "GET"});
    if(response.status === 404) {
-     throw {message: 'Status 404. Server is reachable but there is no JSON for url '+ url +'.\n Return undefined for this request. See Response for details.', response:response};
+     throw new fetchException(`Status 404. Server is reachable but there is no JSON for url: ${url}.\n Return undefined for this request. See Response for details.`, response,  response.status, response.statusText);
    } else if(isContentType(response, "application/json")) {
      return response.json();
    }  else {
-    throw {message: 'Error fetching '+ url +'. See Response for details.', response:response};
+    throw new fetchException('Error fetching '+ url +'. See Response for details.', response, response.status, response.statusText);
    }
 
  }
@@ -292,19 +301,21 @@ async function fetchTargets({ids=[], host="0.0.0.0", port=8301}) {
   if(ids.length === 0) {
     return fetchJSON(`http://${host}:${port}/targets`);
   } else {
+
     let promises = ids.map(async (id) => {
       // Handle 404 status errors to return undefined, so promise.all
-      // does not fail completely, but deliver the list of targets.
+      // does not fail completely and succeeds deliver the list of targets.
       try {
         return await fetchTarget({id, host, port});
 
       } catch (e) {
-        console.error(e.message);
-        if(e.response.status !== 404) {
+        console.log('' + e);
+        console.warn(e.message);
+        // If it isn't a 404 error, actually throw, because it could be a network error.
+        if(e.originalResponse.status === undefined || e.originalResponse.status !== 404) {
           throw e;
         }
       }
-
     });
 
     return Promise.all(promises);
