@@ -239,12 +239,13 @@ async function fetchJSON(url) {
     } else if(isContentType(response, "application/json")) {
       return response.json();
     }  else {
-      console.warn(`Could not fetch JSON for url ${url}\n See Response for details:`, response);
+      console.warn(`Could not fetch JSON for url ${url}\n; See Response for details:`, response);
     }
 
   } catch (e) {
-    console.warn(`Could not fetch fetching JSON for url ${url}\n:`, e);
-    return e;
+    // Some kind of network error.
+    console.warn(`Could not fetch JSON for url ${url}\n:`, e);
+    throw e;
   }
 
 }
