@@ -82,6 +82,8 @@ async function runTests() {
   window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
   window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
 
+  console.log(fetchTargetsResponse);
+
   return Promise.all([
     window.createTargetResponse,
     window.fetchTargetResponse,
@@ -91,6 +93,7 @@ async function runTests() {
     window.fetchAnnotationResponse,
     window.testFetchAnnotationViaWrapperResponse
   ]);
+
 
 };
 

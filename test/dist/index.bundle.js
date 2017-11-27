@@ -164,6 +164,8 @@ async function runTests() {
   window.testCreateAnnotationViaWrapperResponse = await testCreateAnnotationViaWrapper();
   window.testFetchAnnotationViaWrapperResponse = await testFetchAnnotationViaWrapper();
 
+  console.log(fetchTargetsResponse);
+
   return Promise.all([
     window.createTargetResponse,
     window.fetchTargetResponse,
@@ -173,6 +175,7 @@ async function runTests() {
     window.fetchAnnotationResponse,
     window.testFetchAnnotationViaWrapperResponse
   ]);
+
 
 };
 
@@ -230,24 +233,18 @@ function isContentType(response, type) {
  * @param  {String} url url to fetch
  * @return {Object} return JSON object on success, otherwise undefined.
  */
-async function fetchJSON(url) {
+ async function fetchJSON(url) {
 
-  try {
-    let response = await fetch(url, {method: "GET"});
-    if(response.status === 404) {
-      console.warn(`Couldnt find JSON. Status 404 for url ${url}.\n See Response for details:`, response);
-    } else if(isContentType(response, "application/json")) {
-      return response.json();
-    }  else {
-      console.warn(`Could not fetch JSON for url ${url}\n; See Response for details:`, response);
-    }
+   let response = await fetch(url, {method: "GET"});
+   if(response.status === 404) {
+     throw {message: 'Status 404. Server is reachable but there is no JSON for url '+ url +'.\n Return undefined for this request. See Response for details.', response:response};
+   } else if(isContentType(response, "application/json")) {
+     return response.json();
+   }  else {
+    throw {message: 'Error fetching '+ url +'. See Response for details.', response:response};
+   }
 
-  } catch (e) {
-    // Some kind of network error.
-    throw e;
-  }
-
-}
+ }
 
 /**
  * try to create target with given id
@@ -283,8 +280,9 @@ async function fetchTarget({id, host, port}) {
 }
 
 /**
- *  If no ids given, return all targets,
+ *  If no ids given, return all targets in the database.
  *  otherwise return Promise.All() for all given ids.
+ * !! Targets that can't be found will be resolved as undefined. !!
  * @param  {Array}  [ids=[]] Optional list of ids to fetch, if empty fetch all.
  * @param  {String} [host="0.0.0.0"]
  * @param  {Number} [port=8301]
@@ -294,7 +292,21 @@ async function fetchTargets({ids=[], host="0.0.0.0", port=8301}) {
   if(ids.length === 0) {
     return fetchJSON(`http://${host}:${port}/targets`);
   } else {
-    let promises = ids.map(id => fetchTarget({id, host, port}));
+    let promises = ids.map(async (id) => {
+      // Handle 404 status errors to return undefined, so promise.all
+      // does not fail completely, but deliver the list of targets.
+      try {
+        return await fetchTarget({id, host, port});
+
+      } catch (e) {
+        console.error(e.message);
+        if(e.response.status !== 404) {
+          throw e;
+        }
+      }
+
+    });
+
     return Promise.all(promises);
   }
 }

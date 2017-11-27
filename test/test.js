@@ -42,7 +42,6 @@ describe('neon rest API with fetch', function() {
 
     // TODO: Fix tests, so they actually use a random ID instead of default 1
     let createTargetResponse = await driver.executeScript('return window.createTargetResponse');
-    console.log(createTargetResponse);
     assert.equal(createTargetResponse.status, 201);
     assert.equal(createTargetResponse.statusText, 'Created');
 
@@ -57,9 +56,9 @@ describe('neon rest API with fetch', function() {
     // Also expect the second entry to be undefined, as target:2 has not
     // beeen created.
     let fetchTargetsResponse = await driver.executeScript('return window.fetchTargetsResponse');
-    console.log(fetchTargetsResponse);
     assert(fetchTargetsResponse !== undefined && fetchTargetsResponse !== null);
     assert.equal(fetchTargetsResponse.length, 2);
+    assert(fetchTargetsResponse[0] !== undefined);
     assert.equal(fetchTargetsResponse[0].id, 'target:1');
 
     // Create a conflict by trying to create already existing target.
