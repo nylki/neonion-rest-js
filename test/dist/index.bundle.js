@@ -91,7 +91,8 @@ const port = 8301;
 async function testCreateTarget(id='target:1') {
   let response;
     try {
-      response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["c" /* createTarget */])({host, port, id, info:{test:'test'}});
+      response = await Object(__WEBPACK_IMPORTED_MODULE_0__neonion_rest_js__["c" /* createTarget */])({host, port, id, info: {
+        url: 'https://graphics.stanford.edu/courses/cs148-10-summer/as3/code/as3/teapot.obj', test:'test'}});
     } catch (e) {
       console.log('Hmm, some error occured during fetch');
       console.log(e);
